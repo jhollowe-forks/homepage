@@ -3,6 +3,7 @@ import { useTranslation } from "next-i18next";
 import Container from "components/services/widget/container";
 import Block from "components/services/widget/block";
 import useWidgetAPI from "utils/proxy/use-widget-api";
+import MultiBlock from "components/services/widget/multiblock";
 
 const processUptime = uptime => {
 
@@ -16,15 +17,15 @@ const processUptime = uptime => {
     [Math.floor((((seconds % 31536000) % 86400) % 3600) / 60), 'minute'],
     [(((seconds % 31536000) % 86400) % 3600) % 60, 'second'],
   ];
-  
-  for (let i = 0; i< levels.length; i += 1) {
+
+  for (let i = 0; i < levels.length; i += 1) {
     const level = levels[i];
-    if (level[0] > 0){
+    if (level[0] > 0) {
       return {
-          value: level[0],
-          unit: level[1]
-        }
-      } 
+        value: level[0],
+        unit: level[1]
+      }
+    }
   }
 
   return {
@@ -58,11 +59,13 @@ export default function Component({ service }) {
 
   let load = t("common.number", { value: statusData.loadavg[0] });
   let perc = " (" + t("common.percent", { value: 100 * statusData.loadavg[0] / statusData.cores }) + ")";
-  let showPercent = (!widget.fields || widget.fields?.includes("percent"));
 
   return (
     <Container service={service}>
-      <Block label="truenas.load" value={load + (showPercent ? perc : "")} />
+      <MultiBlock service={service}>
+        <Block label="truenas.load" value={load} />
+        <Block label="truenas.percent" value={perc} />
+      </MultiBlock>
       <Block label="truenas.uptime" value={t('truenas.time', processUptime(statusData.uptime_seconds))} />
       <Block label="truenas.alerts" value={t("common.number", { value: alertData.pending })} />
     </Container>

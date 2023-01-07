@@ -1,4 +1,5 @@
 import Error from "./error";
+import MultiBlock from "./multiblock";
 
 export default function Container({ error = false, children, service }) {
   if (error) {
@@ -9,7 +10,7 @@ export default function Container({ error = false, children, service }) {
   const fields = service?.widget?.fields;
   const type = service?.widget?.type;
   if (fields && type) {
-    visibleChildren = children.filter(child => fields.some(field => `${type}.${field}` === child?.props?.label));
+    visibleChildren = children.filter(child => fields.some(field => `${type}.${field}` === child?.props?.label) || child.type === MultiBlock);
   }
 
   return <div className="relative flex flex-row w-full">{visibleChildren}</div>;
