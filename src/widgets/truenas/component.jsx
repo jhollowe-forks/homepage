@@ -55,11 +55,14 @@ export default function Component({ service }) {
       </Container>
     );
   }
-  
+
+  let load = t("common.number", { value: statusData.loadavg[0] });
+  let perc = " (" + t("common.percent", { value: 100 * statusData.loadavg[0] / statusData.cores }) + ")";
+  let showPercent = (!widget.fields || widget.fields?.includes("percent"));
+
   return (
     <Container service={service}>
-      <Block label="truenas.load" value={t("common.number", { value: statusData.loadavg[0] }) + " (" +
-        t("common.percent", { value: 100 * statusData.loadavg[0] / statusData.cores }) + ")"} />
+      <Block label="truenas.load" value={load + (showPercent ? perc : "")} />
       <Block label="truenas.uptime" value={t('truenas.time', processUptime(statusData.uptime_seconds))} />
       <Block label="truenas.alerts" value={t("common.number", { value: alertData.pending })} />
     </Container>
